@@ -1,0 +1,101 @@
+half adder using interface
+module HA(a,b,sum,carry);
+  input a,b;
+  output sum,carry;
+  assign sum=a^b;
+  assign  carry=a&b;
+endmodule
+
+interface ha;
+  logic a,b;
+  logic sum,carry;
+  endinterface
+
+module tb;
+  ha hif();
+  HA dut(.a(hif.a),.b(hif.b),.sum(hif.sum),.carry(hif.carry));
+  initial begin
+    hif.a=0;hif.b=0;#10;
+    hif.a=0;hif.b=1;#10;
+    hif.a=1;hif.b=0;#10;
+    hif.a=1;hif.b=1;#10;
+  end
+  initial begin
+    $monitor("a=%0b,b=%0b,sum=%0b,carry=%0b",hif.a,hif.b,hif.sum,hif.carry);
+    #100;
+    $finish;
+  end
+endmodule
+
+output:
+#KERNEL:  a=0,b=0,sum=0,carry=0
+# KERNEL: a=0,b=1,sum=1,carry=0
+# KERNEL: a=1,b=0,sum=1,carry=0
+# KERNEL: a=1,b=1,sum=0,carry=1
+
+
+2)d flipflop using interface
+
+module d_ff(clk,rst,d,q);
+  input clk,d,rst;
+  output reg q;
+  
+  always@(posedge clk) begin
+    if(!rst)
+      q<=0;
+    else
+      q<=d;
+  end
+endmodule
+
+interface inter;
+  logic clk;
+  logic rst;
+  logic d;
+  logic q;
+  endinterface
+
+module tb;
+  inter dif();
+  d_ff dut(.clk(dif.clk),.rst(dif.rst),.d(dif.d),.q(dif.q));
+  initial begin
+   dif.clk=0;
+    forever #5 dif.clk=~dif.clk;
+  end
+  initial begin
+    dif.rst=0;dif.d=0;#10;
+    dif.rst=0;dif.d=1;#10;
+    dif.rst=0;dif.d=0;#10;
+  end
+  initial begin
+    $monitor("%0t,clk=%0b,rst=%0b,d=%0b,q=%0b",$time,dif.clk,dif.rst,dif.d,dif.q);
+    #100;
+    $finish;
+  end
+endmodule
+
+output:
+# KERNEL: 0,clk=0,rst=0,d=0,q=x
+# KERNEL: 5,clk=1,rst=0,d=0,q=0
+# KERNEL: 10,clk=0,rst=0,d=1,q=0
+# KERNEL: 15,clk=1,rst=0,d=1,q=0
+# KERNEL: 20,clk=0,rst=0,d=0,q=0
+# KERNEL: 25,clk=1,rst=0,d=0,q=0
+# KERNEL: 30,clk=0,rst=0,d=0,q=0
+# KERNEL: 35,clk=1,rst=0,d=0,q=0
+# KERNEL: 40,clk=0,rst=0,d=0,q=0
+# KERNEL: 45,clk=1,rst=0,d=0,q=0
+# KERNEL: 50,clk=0,rst=0,d=0,q=0
+# KERNEL: 55,clk=1,rst=0,d=0,q=0
+# KERNEL: 60,clk=0,rst=0,d=0,q=0
+# KERNEL: 65,clk=1,rst=0,d=0,q=0
+# KERNEL: 70,clk=0,rst=0,d=0,q=0
+# KERNEL: 75,clk=1,rst=0,d=0,q=0
+# KERNEL: 80,clk=0,rst=0,d=0,q=0
+# KERNEL: 85,clk=1,rst=0,d=0,q=0
+# KERNEL: 90,clk=0,rst=0,d=0,q=0
+# KERNEL: 95,clk=1,rst=0,d=0,q=0
+
+
+
+  
